@@ -71,25 +71,6 @@ const Registration = () => {
                   variant="outlined"
                   margin="normal"
                   fullWidth
-                  label="Full Name"
-                  {...register("name", {
-                    required: "Full name is required.",
-                    maxLength: {
-                      value: 20,
-                      message: "Full name should be at most 20 characters.",
-                    },
-                    minLength: {
-                      value: 2,
-                      message: "Full name should be at least 2 characters.",
-                    },
-                  })}
-                  error={Boolean(errors.name)}
-                  helperText={errors.name?.message}
-                />
-                <TextField
-                  variant="outlined"
-                  margin="normal"
-                  fullWidth
                   label="User Name"
                   {...register("username", {
                     required: "User name is required.",

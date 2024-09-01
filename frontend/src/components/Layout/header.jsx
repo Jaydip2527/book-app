@@ -23,6 +23,7 @@ function HeaderComponent(props) {
   const [mobileOpen, setMobileOpen] = useState(false);
   const navigate = useNavigate();
   const isLogin = localStorage.getItem("token");
+  const loginUser = JSON.parse(localStorage.getItem("userDetails"));
   
   const handleDrawerToggle = () => {
     setMobileOpen((prevState) => !prevState);
@@ -83,6 +84,9 @@ function HeaderComponent(props) {
             <img src={img} alt="Logo" width={70} />
           </Typography>
           <Box sx={{ display: { xs: "none", sm: "block" } }}>
+            <Button sx={{ color: "#fff", mr: 2 }}>
+              Welcome {loginUser?.username}
+            </Button>
             <Button sx={{ color: "#fff", backgroundColor: "cornflowerblue" }} onClick={() => handleLogout()}>
               Logout
             </Button>
