@@ -39,11 +39,11 @@ A simple book management application built with React.js (frontend) and Node.js 
 3. Create a `.env` file in the root of both frontend and backend directories and add the required environment variables:
 
     ```plaintext
-    # Example .env content for frontend
+    # Add .env content for frontend
     REACT_APP_API_URL=http://localhost:8000
     ```
     ```plaintext
-    # Example .env content for backend
+    # Add .env content for backend
     PORT=8000
     DB_CONNECTION_URL=mongodb+srv://bookApp:book%40123@book-app.lwyiuri.mongodb.net/
     JWT_SECRET=TQfCctvKgMPPW4iw0w9bYdk4zQgHiyxsTaj6664TXtg69YAzb0TCLCftDCXgB2vg
