@@ -33,5 +33,3 @@ coverage/
 
 # Other
 *.lock
-
-vercel.json
