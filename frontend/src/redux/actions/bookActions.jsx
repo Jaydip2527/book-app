@@ -1,0 +1,92 @@
+import axios from 'axios';
+import { ADD_ITEM, GET_ITEMS, DELETE_ITEM } from '../types/bookTypes';
+import { ADD_BOOK, DELETE_BOOK, GET_BOOK, USER_LOGIN, USER_REGISTRATION } from '../../utils/actionURLs';
+import { toast } from '../../utils/constant';
+import { BOOKLIST, SIGNIN } from '../../routes';
+
+export const getBooksData = (token) => async (dispatch) => {
+  try {
+    // Configure the headers
+    const config = {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`, // Include the token in the Authorization header
+      },
+    };
+    const response = await axios.get(GET_BOOK, config);
+    if (response.data.success) {
+      dispatch({ type: GET_ITEMS, payload: response.data.data });
+    } else {
+      toast(response.data.message, "error");
+      dispatch({ type: GET_ITEMS, payload: [] });
+    }
+  } catch (error) {
+    console.error('Error fetching books', error);
+    toast(error.response.data, "error");
+  }
+};
+
+export const addBook = (book, navigate) => async (dispatch) => {
+  try {
+    const response = await axios.post(ADD_BOOK, book);
+    if (response.data.success) {
+      dispatch({ type: ADD_ITEM, payload: response.data.data });
+      toast(response.data.message, "success");
+      navigate(BOOKLIST);
+    } else {
+      toast(response.data.message, "error");
+    }
+  } catch (error) {
+    console.error('Error adding book', error);
+  }
+};
+
+export const deleteBook = (bookId) => async (dispatch) => {
+  try {
+    const response = await axios.delete(`${DELETE_BOOK}/${bookId}`);
+    if (response.data.success) {
+      dispatch({ type: DELETE_ITEM, payload: bookId });
+      toast(response.data.message, "success");
+    } else {
+      toast(response.data.message, "error");
+    }
+  } catch (error) {
+    console.error('Error adding book', error);
+  }
+};
+
+
+export const registerUser = (user, navigate) => async (dispatch) => {
+  try {
+    const response = await axios.post(USER_REGISTRATION, user);
+    if (response.data.success) {
+      toast(response.data.message, "success");
+      navigate(SIGNIN);
+    } else {
+      toast(response.data.message, "error");
+    }
+  } catch (error) {
+    console.error('Error registering user', error);
+  }
+};
+
+export const loginUser = (credentials, navigate) => async (dispatch) => {
+  try {
+    const response = await axios.post(USER_LOGIN, credentials);
+    if (response.data.success) {
+      const responseData = response?.data?.data;
+      console.log("responseData", responseData);
+      localStorage.setItem("token", responseData.token);
+      const user = JSON.stringify({ name: responseData?.user?.name, email: responseData?.user?.email, username: responseData?.user?.username });
+      localStorage.setItem("userDetails", user);
+      toast(response.data.message, "success");
+      navigate(BOOKLIST);
+    } else {
+      console.log("response.data.message", response.data.message);
+      toast(response.data.message, "error");
+    }
+  } catch (error) {
+    console.error('Error Login user', error);
+    toast(error.message, "error");
+  }
+};
