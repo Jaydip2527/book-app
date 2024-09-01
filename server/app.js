@@ -27,14 +27,17 @@ app.use("/user", userRoutes);
 app.use("/books", bookRoutes);
 
 // For testing only
-app.get("/test", (req, res) => {
-  res.send("ok");
+app.use("/", (req, res) => {
+  res.send("Server is running...");
 });
 
 // Error handling middleware should be the last middleware
 app.use(errorHandler);
 
 // Remove app.listen() for Vercel serverless deployment
+app.listen(process.env.PORT, () => {
+  console.log(`Server is running on port ${process.env.PORT}`);
+});
 
 // Corrected export statement for Vercel
 module.exports = app;
