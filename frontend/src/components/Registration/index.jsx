@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { SIGNIN } from "../../routes";
@@ -23,6 +23,7 @@ import { useDispatch } from "react-redux";
 import { registerUser } from "../../redux/actions/bookActions";
 
 const Registration = () => {
+  const [loading, setLoading] = useState(false);
   const {
     register,
     handleSubmit,
@@ -33,12 +34,15 @@ const Registration = () => {
   const navigate = useNavigate();
 
   const onSubmit = async (data) => {
+    setLoading(true); // Set loading to true when the form is submitted
     try {
-      dispatch(registerUser(data, navigate));
+      await dispatch(registerUser(data, navigate));
       reset();
     } catch (error) {
       console.log("error ::", error);
       toast(error.message, "error");
+    } finally {
+      setLoading(false); // Set loading to false once the request is completed
     }
   };
 
@@ -137,8 +141,9 @@ const Registration = () => {
                   variant="contained"
                   color="primary"
                   sx={{ mt: 3, mb: 2 }}
+                  disabled={loading} // Disable button when loading
                 >
-                  Sign Up
+                  {loading ? "Signing Up..." : "Sign Up"} {/* Change button text based on loading state */}
                 </Button>
                 <Box display="flex" justifyContent="center" mt={2}>
                   <Typography variant="body1">
