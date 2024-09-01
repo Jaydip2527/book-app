@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import HeaderComponent from "../Layout/header";
 import {
   TextField,
@@ -17,6 +17,7 @@ import { BOOKLIST } from "../../routes";
 import { addBook } from "../../redux/actions/bookActions";
 
 export default function BookForm() {
+  const [loading, setLoading] = useState(false); // Add loading state
   const {
     register,
     handleSubmit,
@@ -27,12 +28,15 @@ export default function BookForm() {
   const dispatch = useDispatch();
 
   const onSubmit = async (data) => {
+    setLoading(true); // Set loading to true when the form is submitted
     try {
-      dispatch(addBook(data, navigate));
+      await dispatch(addBook(data, navigate));
       reset();
     } catch (error) {
       console.log("error ::", error);
       toast(error.message, "error");
+    } finally {
+      setLoading(false); // Set loading to false once the request is completed
     }
   };
 
@@ -118,8 +122,13 @@ export default function BookForm() {
                       helperText={errors.description?.message}
                     />
                     <Box display="flex" justifyContent="end" mt={2}>
-                      <Button type="submit" variant="contained" color="primary">
-                        Save Book
+                      <Button
+                        type="submit"
+                        variant="contained"
+                        color="primary"
+                        disabled={loading} // Disable button when loading
+                      >
+                        {loading ? "Saving..." : "Save Book"} {/* Change button text based on loading state */}
                       </Button>
                       <Button
                         type="button"

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { SIGNUP } from "../../routes";
 import { useForm } from "react-hook-form";
@@ -17,6 +17,7 @@ import { useDispatch } from "react-redux";
 import { loginUser } from "../../redux/actions/bookActions";
 
 const Login = () => {
+  const [loading, setLoading] = useState(false);
   const {
     register,
     handleSubmit,
@@ -27,12 +28,15 @@ const Login = () => {
   const navigate = useNavigate();
 
   const onSubmit = async (data) => {
+    setLoading(true);
     try {
-      dispatch(loginUser(data, navigate));
+      await dispatch(loginUser(data, navigate));
       reset();
     } catch (error) {
       console.log("error ::", error);
       toast(error.message, "error");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -110,8 +114,9 @@ const Login = () => {
                   variant="contained"
                   color="primary"
                   sx={{ mt: 2, mb: 2, py: 2 }}
+                  disabled={loading} // Disable button when loading
                 >
-                  Sign In
+                  {loading ? "Loading..." : "Sign In"} {/* Change button text based on loading state */}
                 </Button>
               </form>
               <Typography align="center" variant="body2" gutterBottom>

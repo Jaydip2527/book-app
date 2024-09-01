@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useCallback } from "react";
 import HeaderComponent from "../Layout/header";
-import { Box, Button, InputAdornment, TextField, Toolbar } from "@mui/material";
+import { Box, Button, InputAdornment, TextField, Toolbar, CircularProgress } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
@@ -12,18 +12,24 @@ export default function BookList() {
   const [searchQuery, setSearchQuery] = useState("");
   const [filteredData, setFilteredData] = useState([]);
   const [pageSize, setPageSize] = useState(5); // Default to 5 rows per page
+  const [loading, setLoading] = useState(false); // Add loading state
+  const [deleting, setDeleting] = useState(false); // Add deleting state
+  const [page, setPage] = useState(0); // State to manage the current page
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const booksData = useSelector((state) => state.items.items);
 
   // Memoize getBooks function
   const getBooks = useCallback(async () => {
+    setLoading(true); // Set loading to true when fetching data
     try {
       const token = localStorage.getItem("token");
-      dispatch(getBooksData(token));
+      await dispatch(getBooksData(token));
     } catch (error) {
       console.log("error ::", error);
       toast(error.message, "error");
+    } finally {
+      setLoading(false); // Set loading to false once data fetching is complete
     }
   }, [dispatch]);
 
@@ -51,13 +57,18 @@ export default function BookList() {
   };
 
   const handleDeleteBook = async (row) => {
+    setDeleting(true); // Set deleting to true when starting deletion
     try {
       const msg = await confirmToast("You won't be able to remove this!");
       if (msg) {
-        dispatch(deleteBook(row._id));
+        await dispatch(deleteBook(row._id));
+        getBooks(); // Reload data after deletion
+        setPage(0); // Reset page to the first page
       }
     } catch (error) {
       toast(error.message, "error");
+    } finally {
+      setDeleting(false); // Set deleting to false once deletion is complete
     }
   };
 
@@ -146,45 +157,50 @@ export default function BookList() {
           Add Book
         </Button>
         <Box sx={{ height: "auto", width: "100%", overflowX: "auto" }}>
-          <DataGrid
-            rows={filteredData}
-            columns={columns}
-            getRowId={(row) => row._id}
-            pageSize={pageSize}
-            onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
-            pagination
-            pageSizeOptions={[
-              5,
-              10,
-              20,
-              100,
-              { value: filteredData.length, label: "All" },
-            ]} // Include 'All' option
-            disableColumnMenu
-            initialState={{
-              pagination: {
-                paginationModel: {
-                  pageSize: 5, // Ensure 5 is set as the initial page size
-                },
-              },
-            }}
-            sx={{
-              "& .MuiDataGrid-footerContainer": {
-                flexWrap: "wrap", // Allow wrapping of pagination controls
-              },
-              "& .css-16mfp94-MuiTablePagination-root .MuiTablePagination-selectLabel":
-                {
-                  "@media (max-width:600px)": {
-                    fontSize: "0.60rem", // Adjust font size for smaller screens
+          {(loading || deleting) ? ( // Show loading indicator during data fetch or deletion
+            <Box display="flex" justifyContent="center" alignItems="center" sx={{ height: 400 }}>
+              <CircularProgress />
+            </Box>
+          ) : (
+            <DataGrid
+              rows={filteredData}
+              columns={columns}
+              getRowId={(row) => row._id}
+              pageSize={pageSize}
+              onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
+              pagination
+              pageSizeOptions={[ 5, 10, 20, 100, { value: filteredData.length, label: "All" } ]} // Include 'All' option
+              disableColumnMenu
+              initialState={{
+                pagination: {
+                  paginationModel: {
+                    pageSize: 5, // Ensure 5 is set as the initial page size
+                    page: page, // Use page state to control the current page
                   },
-                  display: "block",
                 },
-              "& .css-16mfp94-MuiTablePagination-root .MuiTablePagination-input":
-                {
-                  display: "block",
+              }}
+              sx={{
+                "& .MuiDataGrid-footerContainer": {
+                  flexWrap: "wrap", // Allow wrapping of pagination controls
                 },
-            }}
-          />
+                "& .css-16mfp94-MuiTablePagination-root .MuiTablePagination-selectLabel":
+                  {
+                    "@media (max-width:600px)": {
+                      fontSize: "0.60rem", // Adjust font size for smaller screens
+                    },
+                    display: "block",
+                  },
+                "& .css-16mfp94-MuiTablePagination-root .MuiTablePagination-input":
+                  {
+                    display: "block",
+                  },
+                "& .MuiDataGrid-filler":
+                  {
+                    display: "none",
+                  },
+              }}
+            />
+          )}
         </Box>
       </Box>
     </>
