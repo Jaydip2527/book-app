@@ -37,7 +37,11 @@ export const addBook = (book, navigate) => async (dispatch) => {
       toast(response.data.message, "error");
     }
   } catch (error) {
-    console.error('Error adding book', error);
+    if (error.response.data.message) {
+      toast(error.response.data.message, "error");
+    } else {
+      toast(error.message, "error");
+    }
   }
 };
 
@@ -51,7 +55,11 @@ export const deleteBook = (bookId) => async (dispatch) => {
       toast(response.data.message, "error");
     }
   } catch (error) {
-    console.error('Error adding book', error);
+    if (error.response.data.message) {
+      toast(error.response.data.message, "error");
+    } else {
+      toast(error.message, "error");
+    }
   }
 };
 
@@ -66,7 +74,11 @@ export const registerUser = (user, navigate) => async (dispatch) => {
       toast(response.data.message, "error");
     }
   } catch (error) {
-    console.error('Error registering user', error);
+    if (error.response.data.message) {
+      toast(error.response.data.message, "error");
+    } else {
+      toast(error.message, "error");
+    }
   }
 };
 
@@ -76,7 +88,7 @@ export const loginUser = (credentials, navigate) => async (dispatch) => {
     if (response.data.success) {
       const responseData = response?.data?.data;
       localStorage.setItem("token", responseData.token);
-      const user = JSON.stringify({ name: responseData?.user?.name, email: responseData?.user?.email, username: responseData?.user?.username });
+      const user = JSON.stringify({ email: responseData?.email, username: responseData?.username });
       localStorage.setItem("userDetails", user);
       toast(response.data.message, "success");
       navigate(BOOKLIST);

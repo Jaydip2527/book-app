@@ -10,7 +10,7 @@ import {
   Grid,
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-import { useDispatch } from 'react-redux';
+import { useDispatch } from "react-redux";
 import { toast } from "../../utils/constant";
 import { useForm } from "react-hook-form";
 import { BOOKLIST } from "../../routes";
@@ -39,94 +39,103 @@ export default function BookForm() {
   return (
     <>
       <HeaderComponent />
-      <Box component="main" sx={{ p: 3 }}>
-      <Toolbar />
-      <Box
-      sx={{
-        minHeight: "80vh",
-        minWidth: "100%",
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        background:
-          "radial-gradient(circle, rgba(238,174,202,1) 0%, rgba(148,187,233,1) 100%)",
-      }}
-    >
-      <Grid container justifyContent="center">
-        <Grid item xs={12} sm={8} md={6} lg={4}>
-          <Card>
-            <CardContent>
-              <Box display="flex" justifyContent="center" mb={2}>
-                Add Book Form
-              </Box>
-              <form onSubmit={handleSubmit(onSubmit)}>
-                <TextField
-                  variant="outlined"
-                  margin="normal"
-                  fullWidth
-                  label="Book Name"
-                  {...register("name", {
-                    required: "Book name is required.",
-                  })}
-                  error={Boolean(errors.name)}
-                  helperText={errors.name?.message}
-                />
-                <TextField
-                  variant="outlined"
-                  margin="normal"
-                  fullWidth
-                  label="Book Title"
-                  {...register("title", {
-                    required: "Book Title is required.",
-                  })}
-                  error={Boolean(errors.title)}
-                  helperText={errors.title?.message}
-                />
-                <TextField
-                  variant="outlined"
-                  margin="normal"
-                  fullWidth
-                  label="Book Author"
-                  {...register("authors", {
-                    required: "Book Author is required.",
-                  })}
-                  error={Boolean(errors.authors)}
-                  helperText={errors.authors?.message}
-                />
-                <TextField
-                  variant="outlined"
-                  margin="normal"
-                  fullWidth
-                  label="Book Subtitle"
-                  {...register("subtitle", {
-                    required: "Book Subtitle is required.",
-                  })}
-                  error={Boolean(errors.subtitle)}
-                  helperText={errors.subtitle?.message}
-                />
-                <Box display="flex" justifyContent="end" mt={2}>
-                  <Button
-                    type="submit"
-                    variant="contained"
-                    color="primary"
-                  >
-                    Save Book
-                  </Button>
-                  <Button
-                    type="button"
-                    variant="contained"
-                    color="primary"
-                    sx={{ ml: 1 }}
-                    onClick={() => navigate(BOOKLIST)}
-                  >
-                    Back
-                  </Button>
-                </Box>
-              </form>
-            </CardContent>
-          </Card>
-        </Grid>
-      </Grid>
+      <Box component="main" sx={{ p: 1 }}>
+        <Toolbar />
+        <Box
+          sx={{
+            minHeight: "auto",
+            padding: "20px",
+            minWidth: "100%",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            background:
+              "radial-gradient(circle, rgba(238,174,202,1) 0%, rgba(148,187,233,1) 100%)",
+          }}
+        >
+          <Grid container justifyContent="center">
+            <Grid item xs={12} sm={8} md={6} lg={4}>
+              <Card>
+                <CardContent>
+                  <Box display="flex" justifyContent="center" mb={2}>
+                    Add Book Form
+                  </Box>
+                  <form onSubmit={handleSubmit(onSubmit)}>
+                    <TextField
+                      variant="outlined"
+                      margin="normal"
+                      fullWidth
+                      label="Book Title"
+                      {...register("title", {
+                        required: "Book Title is required.",
+                      })}
+                      error={Boolean(errors.title)}
+                      helperText={errors.title?.message}
+                    />
+                    <TextField
+                      variant="outlined"
+                      margin="normal"
+                      fullWidth
+                      label="Book Author"
+                      {...register("authors", {
+                        required: "Book Author is required.",
+                      })}
+                      error={Boolean(errors.authors)}
+                      helperText={errors.authors?.message}
+                    />
+                    <TextField
+                      variant="outlined"
+                      margin="normal"
+                      fullWidth
+                      label="Isbn Number"
+                      {...register("isbn", {
+                        required: "Isbn Number is required.",
+                        pattern: {
+                          value: /^[0-9-]+$/,
+                          message:
+                            "ISBN Number must only contain numbers and dashes.",
+                        },
+                      })}
+                      error={Boolean(errors.isbn)}
+                      helperText={errors.isbn?.message}
+                    />
+                    <TextField
+                      variant="outlined"
+                      margin="normal"
+                      fullWidth
+                      label="Book Subtitle"
+                      {...register("subtitle")}
+                      error={Boolean(errors.subtitle)}
+                      helperText={errors.subtitle?.message}
+                    />
+                    <TextField
+                      variant="outlined"
+                      margin="normal"
+                      fullWidth
+                      label="Description"
+                      {...register("description")}
+                      error={Boolean(errors.description)}
+                      helperText={errors.description?.message}
+                    />
+                    <Box display="flex" justifyContent="end" mt={2}>
+                      <Button type="submit" variant="contained" color="primary">
+                        Save Book
+                      </Button>
+                      <Button
+                        type="button"
+                        variant="contained"
+                        color="primary"
+                        sx={{ ml: 1 }}
+                        onClick={() => navigate(BOOKLIST)}
+                      >
+                        Back
+                      </Button>
+                    </Box>
+                  </form>
+                </CardContent>
+              </Card>
+            </Grid>
+          </Grid>
         </Box>
       </Box>
     </>
