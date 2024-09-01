@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import HeaderComponent from "../Layout/header";
 import { Box, Button, InputAdornment, TextField, Toolbar } from "@mui/material";
 import SearchIcon from '@mui/icons-material/Search';
@@ -15,9 +15,20 @@ export default function BookList() {
   const dispatch = useDispatch();
   const booksData = useSelector((state) => state.items.items);
   
+  // Memoize getBooks function
+  const getBooks = useCallback(async () => {
+    try {
+      const token = localStorage.getItem('token');
+      dispatch(getBooksData(token));
+    } catch (error) {
+      console.log("error ::", error);
+      toast(error.message, "error");
+    }
+  }, [dispatch]); // Add dispatch as dependency since it's used inside the function
+
   useEffect(() => {
     getBooks();
-  }, []);
+  }, [getBooks]); // Add getBooks to the dependency array
 
   useEffect(() => {
     if (booksData.length) {
@@ -30,23 +41,13 @@ export default function BookList() {
     }
   }, [searchQuery, booksData]);
 
-  const getBooks = async () => {
-    try {
-      const token = localStorage.getItem('token');
-      dispatch(getBooksData(token));
-    } catch (error) {
-      console.log("error ::", error);
-      toast(error.message, "error");
-    }
-  };
-
   const handleSearchChange = (e) => {
     setSearchQuery(e.target.value);
   };
 
   const handleDeleteBook = async (row) => {
     try {
-      const msg = await confirmToast("You won't be able to removed this!"); // msg
+      const msg = await confirmToast("You won't be able to remove this!"); // msg
       if (msg) {
         dispatch(deleteBook(row._id));
       }
