@@ -15,11 +15,11 @@ app.use(cors());
 // Database connection
 mongoose
   .connect(process.env.DB_CONNECTION_URL)
-  .then((res) => {
+  .then(() => {
     console.log("DB connected successfully");
   })
   .catch((e) => {
-    console.log("Failed to connect BD", e);
+    console.log("Failed to connect DB", e);
   });
 
 // Import Routers
@@ -34,8 +34,7 @@ app.get("/test", (req, res) => {
 // Error handling middleware should be the last middleware
 app.use(errorHandler);
 
-app.listen(process.env.PORT, () => {
-  `Server started on port ${process.env.PORT}`;
-});
+// Remove app.listen() for Vercel serverless deployment
 
-exports.module = app;
+// Corrected export statement for Vercel
+module.exports = app;
