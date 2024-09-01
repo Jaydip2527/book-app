@@ -75,18 +75,19 @@ export const loginUser = (credentials, navigate) => async (dispatch) => {
     const response = await axios.post(USER_LOGIN, credentials);
     if (response.data.success) {
       const responseData = response?.data?.data;
-      console.log("responseData", responseData);
       localStorage.setItem("token", responseData.token);
       const user = JSON.stringify({ name: responseData?.user?.name, email: responseData?.user?.email, username: responseData?.user?.username });
       localStorage.setItem("userDetails", user);
       toast(response.data.message, "success");
       navigate(BOOKLIST);
     } else {
-      console.log("response.data.message", response.data.message);
       toast(response.data.message, "error");
     }
   } catch (error) {
-    console.error('Error Login user', error);
-    toast(error.message, "error");
+    if (error.response.data.message) {
+      toast(error.response.data.message, "error");
+    } else {
+      toast(error.message, "error");
+    }
   }
 };
