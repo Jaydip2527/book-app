@@ -11,8 +11,8 @@ A simple book management application built with React.js (frontend) and Node.js 
 
 ## Technologies
 
-- Frontend: React.js
-- Backend: Node.js, Express.js
+- Frontend: React.js - (React.js version 18)
+- Backend: Node.js, Express.js - (Node.js version must have 16 or abow)
 - Database: MongoDB
 
 ## Installation
