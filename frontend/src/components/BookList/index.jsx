@@ -13,7 +13,6 @@ export default function BookList() {
   const [filteredData, setFilteredData] = useState([]);
   const [pageSize, setPageSize] = useState(5); // Default to 5 rows per page
   const [loading, setLoading] = useState(false); // Add loading state
-  const [deleting, setDeleting] = useState(false); // Add deleting state
   const [page, setPage] = useState(0); // State to manage the current page
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -57,7 +56,6 @@ export default function BookList() {
   };
 
   const handleDeleteBook = async (row) => {
-    setDeleting(true); // Set deleting to true when starting deletion
     try {
       const msg = await confirmToast("You won't be able to remove this!");
       if (msg) {
@@ -67,8 +65,6 @@ export default function BookList() {
       }
     } catch (error) {
       toast(error.message, "error");
-    } finally {
-      setDeleting(false); // Set deleting to false once deletion is complete
     }
   };
 
@@ -157,7 +153,7 @@ export default function BookList() {
           Add Book
         </Button>
         <Box sx={{ height: "auto", width: "100%", overflowX: "auto" }}>
-          {(loading || deleting) ? ( // Show loading indicator during data fetch or deletion
+          {loading ? ( // Show loading indicator during data fetch or deletion
             <Box display="flex" justifyContent="center" alignItems="center" sx={{ height: 400 }}>
               <CircularProgress />
             </Box>
