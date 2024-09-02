@@ -35,7 +35,7 @@ class userService {
 
   async getUserByUsername(username) {
     const user = await userModel.findOne({ username }, { __v: 0 });
-    return user._doc;
+    return user?._doc;
   }
 
   async login(data) {
@@ -43,9 +43,10 @@ class userService {
     const userData = await this.getUserByUsername(data.username);
     if (!userData) {
       console.log("user not found");
+      return { message: "User not found", success: false };
     }
     const verifyPassword = await new Promise((resolve, reject) => {
-      bcrypt.compare(data.password, userData.password, (err, res) => {
+      bcrypt.compare(data.password, userData?.password, (err, res) => {
         if (err) {
           reject(err);
           return;
