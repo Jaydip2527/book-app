@@ -83,6 +83,18 @@ function HeaderComponent(props) {
           >
             <img src={img} alt="Logo" width={70} />
           </Typography>
+          <Box sx={{ display: { sm: "none", display: "flex", justifyContent: "space-between", alignItems: "center", width: "100%" } }}>
+            <Typography
+              variant="h6"
+              component="div"
+              sx={{ flexGrow: 1 }}
+            >
+              <img src={img} alt="Logo" width={70} />
+            </Typography>
+            <Button sx={{ color: "#fff", mr: 2 }}>
+              Welcome {loginUser?.username}
+            </Button>
+          </Box>
           <Box sx={{ display: { xs: "none", sm: "block" } }}>
             <Button sx={{ color: "#fff", mr: 2 }}>
               Welcome {loginUser?.username}
